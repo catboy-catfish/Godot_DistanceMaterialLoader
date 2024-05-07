@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdt3n748j4u1b"]
+
+[ext_resource type="Script" path="res://DemoFolder/Nodes/FlyingCamera/FlyingCamera.gd" id="1_54hv0"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_6v8pe"]
+radius = 0.1
+
+[node name="FlyingCamera" type="CharacterBody3D"]
+script = ExtResource("1_54hv0")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_6v8pe")

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dx2307tggi8e1"]
+
+[ext_resource type="Texture2D" path="res://DemoFolder/Textures/CheckeredMips/256.dds" id="1_vtoe7"]
+
+[resource]
+albedo_texture = ExtResource("1_vtoe7")
+texture_filter = 0
+proximity_fade_distance = 0.01

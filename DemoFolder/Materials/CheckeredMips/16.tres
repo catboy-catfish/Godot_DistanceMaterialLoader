@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dqmgat4hwsldv"]
+
+[ext_resource type="Texture2D" path="res://DemoFolder/Textures/CheckeredMips/8.dds" id="1_hldth"]
+
+[resource]
+albedo_texture = ExtResource("1_hldth")
+texture_filter = 0
+proximity_fade_distance = 0.01

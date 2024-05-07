@@ -1,0 +1,138 @@
+[gd_scene load_steps=12 format=3 uid="uid://febu8msw48yp"]
+
+[ext_resource type="PackedScene" uid="uid://bdt3n748j4u1b" path="res://DemoFolder/Nodes/FlyingCamera/FlyingCamera.tscn" id="1_ofak5"]
+[ext_resource type="Script" path="res://DemoFolder/Scripts/Metrics.gd" id="1_s145h"]
+[ext_resource type="Material" uid="uid://bhhdff18cvfen" path="res://DemoFolder/Materials/CheckeredMips/512.tres" id="2_6weon"]
+[ext_resource type="Script" path="res://DistanceMaterialLoader/DistanceMaterialLoader.cs" id="2_o5shf"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_36qf5"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_r6uo1"]
+sky_material = SubResource("ProceduralSkyMaterial_36qf5")
+
+[sub_resource type="Environment" id="Environment_vrh48"]
+background_mode = 2
+sky = SubResource("Sky_r6uo1")
+tonemap_mode = 2
+glow_enabled = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_gaxiv"]
+size = Vector3(20, 1, 20)
+
+[sub_resource type="BoxMesh" id="BoxMesh_x4twt"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_kiyht"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3kvjp"]
+
+[node name="Demo" type="Node3D"]
+script = ExtResource("1_s145h")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_vrh48")
+
+[node name="FlyingCamera" parent="." instance=ExtResource("1_ofak5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="Camera3D" type="Camera3D" parent="FlyingCamera"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("BoxShape3D_gaxiv")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor/CollisionShape3D"]
+transform = Transform3D(20, 0, 0, 0, 1, 0, 0, 0, 20, 0, 0, 0)
+mesh = SubResource("BoxMesh_x4twt")
+skeleton = NodePath("../../..")
+
+[node name="Cube" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.5, -9.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube"]
+shape = SubResource("BoxShape3D_kiyht")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube"]
+mesh = SubResource("BoxMesh_3kvjp")
+surface_material_override/0 = ExtResource("2_6weon")
+
+[node name="DistanceMaterialLoader" type="Node3D" parent="Cube" node_paths=PackedStringArray("camera", "meshInstance")]
+script = ExtResource("2_o5shf")
+camera = NodePath("../../FlyingCamera/Camera3D")
+meshInstance = NodePath("../MeshInstance3D")
+maximumQuality = 0
+minimumQuality = 13
+mp_0001 = "res://DemoFolder/Materials/CheckeredMips/1.tres"
+mp_0002 = "res://DemoFolder/Materials/CheckeredMips/2.tres"
+mp_0004 = "res://DemoFolder/Materials/CheckeredMips/4.tres"
+mp_0008 = "res://DemoFolder/Materials/CheckeredMips/8.tres"
+mp_0016 = "res://DemoFolder/Materials/CheckeredMips/16.tres"
+mp_0032 = "res://DemoFolder/Materials/CheckeredMips/32.tres"
+mp_0064 = "res://DemoFolder/Materials/CheckeredMips/64.tres"
+mp_0128 = "res://DemoFolder/Materials/CheckeredMips/128.tres"
+mp_0256 = "res://DemoFolder/Materials/CheckeredMips/256.tres"
+mp_0512 = "res://DemoFolder/Materials/CheckeredMips/512.tres"
+mp_1024 = "res://DemoFolder/Materials/CheckeredMips/1024.tres"
+mp_2048 = "res://DemoFolder/Materials/CheckeredMips/2048.tres"
+mp_4096 = "res://DemoFolder/Materials/CheckeredMips/4096.tres"
+mp_8192 = "res://DemoFolder/Materials/CheckeredMips/8192.tres"
+
+[node name="Cube2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.5, -9.5)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube2"]
+shape = SubResource("BoxShape3D_kiyht")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube2"]
+mesh = SubResource("BoxMesh_3kvjp")
+surface_material_override/0 = ExtResource("2_6weon")
+
+[node name="DistanceMaterialLoader" type="Node3D" parent="Cube2" node_paths=PackedStringArray("camera", "meshInstance")]
+script = ExtResource("2_o5shf")
+camera = NodePath("../../FlyingCamera/Camera3D")
+meshInstance = NodePath("../MeshInstance3D")
+maximumQuality = 0
+minimumQuality = 13
+mp_0001 = "res://DemoFolder/Materials/CheckeredMips/1.tres"
+mp_0002 = "res://DemoFolder/Materials/CheckeredMips/2.tres"
+mp_0004 = "res://DemoFolder/Materials/CheckeredMips/4.tres"
+mp_0008 = "res://DemoFolder/Materials/CheckeredMips/8.tres"
+mp_0016 = "res://DemoFolder/Materials/CheckeredMips/16.tres"
+mp_0032 = "res://DemoFolder/Materials/CheckeredMips/32.tres"
+mp_0064 = "res://DemoFolder/Materials/CheckeredMips/64.tres"
+mp_0128 = "res://DemoFolder/Materials/CheckeredMips/128.tres"
+mp_0256 = "res://DemoFolder/Materials/CheckeredMips/256.tres"
+mp_0512 = "res://DemoFolder/Materials/CheckeredMips/512.tres"
+mp_1024 = "res://DemoFolder/Materials/CheckeredMips/1024.tres"
+mp_2048 = "res://DemoFolder/Materials/CheckeredMips/2048.tres"
+mp_4096 = "res://DemoFolder/Materials/CheckeredMips/4096.tres"
+mp_8192 = "res://DemoFolder/Materials/CheckeredMips/8192.tres"
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="FPS" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 14.0
+offset_top = 14.0
+offset_right = 172.0
+offset_bottom = 37.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Video memory:"
+
+[node name="TextureMem" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 41.0
+offset_right = 173.0
+offset_bottom = 64.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Texture memory:"
