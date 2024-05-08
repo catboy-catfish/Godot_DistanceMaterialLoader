@@ -30,6 +30,7 @@ public partial class DistanceMaterialLoader : Node3D
     [Export] Camera3D camera;
     [Export] MeshInstance3D meshInstance;
     [Export] int materialSlot;
+    [Export] bool useGarbageCollection = true;
 
     [ExportGroup("parameters")]
     [ExportSubgroup("update")]
@@ -78,9 +79,15 @@ public partial class DistanceMaterialLoader : Node3D
 
     async void loop()
     {
-        collectGarbage();
+        if(useGarbageCollection) collectGarbage();
 
-        meshInstance.SetSurfaceOverrideMaterial( materialSlot, GD.Load<Material>( targetMaterial() ) );
+        if(materialSlot > -1)
+        {
+            meshInstance.SetSurfaceOverrideMaterial( materialSlot, GD.Load<Material>( targetMaterial() ) );
+        } else {
+            //TODO: Set geometry material override, somehow
+            //meshInstance.SetActiveMaterial( GD.Load<Material>( targetMaterial() ) );
+        }
 
         await ToSignal( GetTree().CreateTimer( 1/updateRate ) , "timeout");
 

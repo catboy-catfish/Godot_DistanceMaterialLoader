@@ -126,13 +126,22 @@ offset_top = 14.0
 offset_right = 172.0
 offset_bottom = 37.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Video memory:"
+text = "Frames/sec:"
 
-[node name="TextureMem" type="Label" parent="Control"]
+[node name="VideoMem" type="Label" parent="Control"]
 layout_mode = 0
 offset_left = 15.0
 offset_top = 41.0
 offset_right = 173.0
 offset_bottom = 64.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Video memory:"
+
+[node name="TextureMem" type="Label" parent="Control"]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 67.0
+offset_right = 173.0
+offset_bottom = 90.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Texture memory:"
