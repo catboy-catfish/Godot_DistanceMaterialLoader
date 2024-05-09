@@ -11,20 +11,22 @@ using System;
 [GlobalClass]
 public partial class DistanceMaterialLoader : Node3D
 {
-	const int _8192 = 0;
-    const int _4096 = 1;
-    const int _2048 = 2;
-    const int _1024 = 3;
-    const int _512 = 4;
-    const int _256 = 5;
-    const int _128 = 6;
-    const int _64 = 7;
-    const int _32 = 8;
-    const int _16 = 9;
-    const int _8 = 10;
-    const int _4 = 11;
-    const int _2 = 12;
-    const int _1 = 13;
+	enum TextureQuality
+    {
+        _8192,
+        _4096,
+        _2048,
+        _1024,
+        _0512,
+        _0256,
+        _0128,
+        _0064,
+        _0032,
+        _0016,
+        _0008,
+        _0004,
+        _0002
+    }
     
     [ExportGroup("setup")]
     [Export] Camera3D camera;
@@ -36,8 +38,8 @@ public partial class DistanceMaterialLoader : Node3D
     [ExportSubgroup("update")]
     [Export] float updateRate = 10f;
     [ExportSubgroup("quality")]
-    [Export(PropertyHint.Range, "0,13,")] int maximumQuality = 2;
-    [Export(PropertyHint.Range, "0,13,")] int minimumQuality = 6;
+    [Export] TextureQuality maximumQuality = TextureQuality._2048;
+    [Export] TextureQuality minimumQuality = TextureQuality._0256;
     [Export] float distanceMultiplier = 1;
 
     [ExportGroup("material paths")]
@@ -68,7 +70,8 @@ public partial class DistanceMaterialLoader : Node3D
     {
         cameraMeshDistance = (meshInstance.GlobalPosition - camera.GlobalPosition).Length() * distanceMultiplier;
 
-        qualityToLoad = (int)Mathf.Min( Mathf.Max(cameraMeshDistance, maximumQuality), minimumQuality );
+        //Find a way to not use as much type casting?
+        qualityToLoad = (int)Mathf.Min( Mathf.Max(cameraMeshDistance, (int)maximumQuality), (int)minimumQuality );
     }
 
     void collectGarbage()
