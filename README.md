@@ -62,6 +62,10 @@ This is a C# script for Godot that switches between different materials based on
 
 - The material paths are designated `mp0001` to `mp8192` because they are designed to be used with textures 1x1 to 8192x8192 in size, but it isn't strictly necessary to use this convention. It *is* possible to go beyond these limitations, such as using textures bigger than 8192x8192, or different aspect ratios.
   
-  
+## Goals:
+
+- Add a way to further customize when the materials are updated (like in _Process() or _PhysicsProcess()) instead of just the custom update loop.
+
+- Perhaps reduce the amount of type-casting in the script, if that is necessary and/or doable.
 
 This is a very hacky way to implement texture streaming, and it doesn't help that this is my first attempt. If there's any way that this script could be optimized/improved upon, feel free to let me know. In any case, I hope it helps you. gh:catboy-catfish.
