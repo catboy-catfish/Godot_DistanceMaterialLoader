@@ -68,4 +68,6 @@ This is a C# script for Godot that switches between different materials based on
 
 - Perhaps reduce the amount of type-casting in the script, if that is necessary and/or doable.
 
+
+
 This is a very hacky way to implement texture streaming, and it doesn't help that this is my first attempt. If there's any way that this script could be optimized/improved upon, feel free to let me know. In any case, I hope it helps you. gh:catboy-catfish.
