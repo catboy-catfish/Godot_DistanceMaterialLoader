@@ -64,6 +64,8 @@ This is a C# script for Godot that switches between different materials based on
   
 ## Goals:
 
+- The distance between the camera and mesh is strictly linear. Add options to customize the behaviour, like to offset it or to make it more asymptotic and/or exponential.
+
 - Add a way to further customize when the materials are updated (like in _Process() or _PhysicsProcess()) instead of just the custom update loop.
 
 - Perhaps reduce the amount of type-casting in the script, if that is necessary and/or doable.
