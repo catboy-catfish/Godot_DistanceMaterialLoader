@@ -6,7 +6,7 @@ This is a C# script for Godot that switches between different materials based on
 
 ## Features:
 
-- Switches between ~13 different materials, intended for materials with textures ranging from 2x2 to 8192x8192 in resolution.
+- Switches between ~13 different materials, intended for materials with textures ranging from 2x2 to 4k in resolution.
 
 - Configurable upper and lower boundaries placed upon the materials that should be selected.
 
@@ -21,6 +21,8 @@ This is a C# script for Godot that switches between different materials based on
   
 
 ## Limitations:
+
+- Doesn't seem to be able to deallocate 8K .dds textures from VRAM, resulting in a large memory leak in Performance.RENDER_VIDEO_MEM_USED. I've fixed this before but I have no clue how, now it's broken again. Not sure if this is an issue with the script or with Godot 4.3.dev6. To get around this I've changed the default MaximumLOD to 4K instead of 8K.
 
 - The materials aren't directly configurable as an export fields; instead the paths to them are exported as strings. Pasting all of them repeatedly is tedious, and it doesn't sync with name-changes/moves/deletions. Storing the materials in export fields would keep all of them loaded in memory at all times, defeating the purpose of this script.
 
@@ -38,21 +40,23 @@ This is a C# script for Godot that switches between different materials based on
 
 ## Parameters:
 
+- `setup/enabled`: Whether or not DistanceMaterialLoader should even run.
+
+- 
+
 - `setup/camera`: The camera that DistanceMaterialLoader will use to calculate the distance between the mesh and the camera.
 
 - `setup/meshInstance`: The MeshInstance3D that DistanceMaterialLoader will use to calculate the distance between the camera and the mesh.
 
 - `setup/materialSlot`: The Surface Material Override slot that DistanceMaterialLoader will replace. Any value lower than 0 is planned to set the Geometry material override instead, but this hasn't been implemented yet.
 
-- `setup/useGarbageCollection`: Whether or not to use garbage collection on the update loop. I am unsure about what this does exactly but apparently it cleans up memory leaks, so I added it here.
+- `parameters/distance/distanceSensitivity`: How much DistanceMaterialLoader reacts to different distances. Higher values mean that higher LODs only appear when the camera is closer to the mesh. Lower values mean that higher LODs are visible from farther away.
 
-- `parameters/update/updateRate`: How often the materials and calculations will update per second.
+- `parameters/quality/maximumLOD`: The maximum material LOD that DistanceMaterialLoader will load. Ranges from _8192 (value: 0) to _1 (value: 13).
 
-- `parameters/quality/maximumQuality`: The maximum texture quality that DistanceMaterialLoader will load. Ranges from _8192 (value: 0) to _1 (value: 13).
+- `parameters/quality/minimumQuality`: The minimum material LOD that DistanceMaterialLoader will load. Ranges from 0 (8192x8192) to 13 (1 pixel).
 
-- `parameters/quality/minimumQuality`: The minimum texture quality that DistanceMaterialLoader will load. Ranges from 0 (8192x8192) to 13 (1 pixel).
-
-- `parameters/quality/distanceMultiplier`: The multiplier for the distance between the camera and the MeshInstance3D. Lower means that higher quality materials will be visible from farther away. Adjust to taste.
+- `parameters/update/updateInterval`: The interval, in seconds, before every time DistanceMaterialLoader updates the materials, calculations and other variables.
 
 - `material paths/mp0001` to `material paths/mp8192`: The paths to the materials. Increases in resolution by powers of 2. Only the paths to the materials are held in exported strings, not the materials themselves. If they were then all of the materials would be loaded at all times, making this script useless. The materials are instead loaded manually.
   
@@ -61,7 +65,7 @@ This is a C# script for Godot that switches between different materials based on
 ## Notes:
 
 - The material paths are designated `mp0001` to `mp8192` because they are designed to be used with textures 1x1 to 8192x8192 in size, but it isn't strictly necessary to use this convention. It *is* possible to go beyond these limitations, such as using textures bigger than 8192x8192, or different aspect ratios.
-  
+
 ## Goals:
 
 - The distance between the camera and mesh is strictly linear. Add options to customize the behaviour, like to offset it or to make it more asymptotic and/or exponential.
@@ -69,7 +73,7 @@ This is a C# script for Godot that switches between different materials based on
 - Add a way to further customize when the materials are updated (like in _Process() or _PhysicsProcess()) instead of just the custom update loop.
 
 - Perhaps reduce the amount of type-casting in the script, if that is necessary and/or doable.
-
-
+  
+  
 
 This is a very hacky way to implement texture streaming, and it doesn't help that this is my first attempt. If there's any way that this script could be optimized/improved upon, feel free to let me know. In any case, I hope it helps you. gh:catboy-catfish.

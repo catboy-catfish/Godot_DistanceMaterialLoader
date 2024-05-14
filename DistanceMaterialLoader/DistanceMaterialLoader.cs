@@ -1,4 +1,12 @@
+//https://github.com/godotengine/godot/issues/82112
 //https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_basics.html
+//https://docs.godotengine.org/en/stable/tutorials/scripting/c_sharp/c_sharp_differences.html
+//https://docs.godotengine.org/en/stable/classes/class_resourceloader.html#class-resourceloader-method-has-cached
+//https://learn.microsoft.com/en-us/dotnet/api/system.gc.collect?view=net-8.0
+//https://learn.microsoft.com/en-us/dotnet/api/system.gccollectionmode?view=net-8.0
+//https://learn.microsoft.com/en-us/dotnet/api/system.gc.waitforpendingfinalizers?view=net-8.0
+//https://www.reddit.com/r/godot/comments/1888ige/scene_unloading_not_really_unloads_anything_ram/
+//https://www.youtube.com/watch?v=S3QPvd2Eq4w
 
 using Godot;
 using System;
@@ -6,72 +14,76 @@ using System;
 /*
     Distance Material Loader
     created by gh:catboy-catfish, mit license
+    thanks for the help: xill47, spookyspice
 */
 
 [GlobalClass]
 public partial class DistanceMaterialLoader : Node3D
 {
-	enum TextureQuality
-    {
-        _8192,
-        _4096,
-        _2048,
-        _1024,
-        _0512,
-        _0256,
-        _0128,
-        _0064,
-        _0032,
-        _0016,
-        _0008,
-        _0004,
-        _0002
+	enum LOD{
+        lod_8192,
+        lod_4096,
+        lod_2048,
+        lod_1024,
+        lod_0512,
+        lod_0256,
+        lod_0128,
+        lod_0064,
+        lod_0032,
+        lod_0016,
+        lod_0008,
+        lod_0004,
+        lod_0002,
+        lod_0001
     }
     
     [ExportGroup("setup")]
+    [Export] bool enabled = true;
     [Export] Camera3D camera;
     [Export] MeshInstance3D meshInstance;
     [Export] int materialSlot;
-    [Export] bool useGarbageCollection = true;
 
     [ExportGroup("parameters")]
-    [ExportSubgroup("update")]
-    [Export] float updateRate = 10f;
+    [ExportSubgroup("distance")]
+    [Export] float distanceSensitivity = 1;
     [ExportSubgroup("quality")]
-    [Export] TextureQuality maximumQuality = TextureQuality._2048;
-    [Export] TextureQuality minimumQuality = TextureQuality._0256;
-    [Export] float distanceMultiplier = 1;
+    [Export] LOD maximumLOD = LOD.lod_4096;
+    [Export] LOD minimumLOD = LOD.lod_0001;
+    [ExportSubgroup("update")]
+    [Export] float updateInterval = 0.1f;
 
     [ExportGroup("material paths")]
-    [Export] string mp_0001;
-    [Export] string mp_0002;
-    [Export] string mp_0004;
-    [Export] string mp_0008;
-    [Export] string mp_0016;
-    [Export] string mp_0032;
-    [Export] string mp_0064;
-    [Export] string mp_0128;
-    [Export] string mp_0256;
-    [Export] string mp_0512;
-    [Export] string mp_1024;
-    [Export] string mp_2048;
-    [Export] string mp_4096;
-    [Export] string mp_8192;
+    [Export] String path_0001;
+    [Export] String path_0002;
+    [Export] String path_0004;
+    [Export] String path_0008;
+    [Export] String path_0016;
+    [Export] String path_0032;
+    [Export] String path_0064;
+    [Export] String path_0128;
+    [Export] String path_0256;
+    [Export] String path_0512;
+    [Export] String path_1024;
+    [Export] String path_2048;
+    [Export] String path_4096;
+    [Export] String path_8192;
 
+    double timeRemaining;
+    Material currentMaterial;
+    bool canUpdate;
     float cameraMeshDistance;
-    int qualityToLoad;
+    int lodToLoad;
 
-    public override void _Ready()
-    {   
-        loop();
+    public override void _Ready(){
+        timeRemaining = updateInterval;
     }
 
-    void calculations()
-    {
-        cameraMeshDistance = (meshInstance.GlobalPosition - camera.GlobalPosition).Length() * distanceMultiplier;
-
-        //Find a way to not use as much type casting?
-        qualityToLoad = (int)Mathf.Min( Mathf.Max(cameraMeshDistance, (int)maximumQuality), (int)minimumQuality );
+    void calculations(){
+        int iMaxLOD = (int)maximumLOD;
+        int iMinLOD = (int)minimumLOD;
+        
+        cameraMeshDistance = (meshInstance.GlobalPosition - camera.GlobalPosition).Length() * distanceSensitivity;
+        lodToLoad = (int)Mathf.Clamp(cameraMeshDistance, iMaxLOD, iMinLOD);
     }
 
     void collectGarbage()
@@ -80,62 +92,62 @@ public partial class DistanceMaterialLoader : Node3D
         GC.WaitForPendingFinalizers();
     }
 
-    async void loop()
-    {
-        if(useGarbageCollection) collectGarbage();
-
-        if(materialSlot > -1)
-        {
-            meshInstance.SetSurfaceOverrideMaterial( materialSlot, GD.Load<Material>( targetMaterial() ) );
-        } else {
-            //TODO: Set geometry material override, somehow
-            //meshInstance.SetActiveMaterial( GD.Load<Material>( targetMaterial() ) );
-        }
-
-        await ToSignal( GetTree().CreateTimer( 1/updateRate ) , "timeout");
-
-        calculations();
+    public override void _PhysicsProcess(double delta){
         
-        loop();
-    }
+        if(enabled){
+            if(updateInterval >= delta){
+                timeRemaining -= delta;
 
-    String targetMaterial()
-    {
-        switch(qualityToLoad)
-        {
-            case 0:
-                return mp_8192;
-            case 1:
-                return mp_4096;
-            case 2:
-                return mp_2048;
-            case 3:
-                return mp_1024;
-            case 4:
-                return mp_0512;
-            case 5:
-                return mp_0256;
-            case 6:
-                return mp_0128;
-            case 7:
-                return mp_0064;
-            case 8:
-                return mp_0032;
-            case 9:
-                return mp_0016;
-            case 10:
-                return mp_0008;
-            case 11:
-                return mp_0004;
-            case 12:
-                return mp_0002;
-            default:
-                return mp_0001;
+                if(timeRemaining <= 0){
+                    timeRemaining += Mathf.Abs(updateInterval);
+                    update();
+                }
+            } else {
+                update();
+            }
         }
     }
 
-    void updateMaterial()
-    {
+    String targetMaterial(){
+        switch(lodToLoad){
+            case 0:
+                return path_8192;
+            case 1:
+                return path_4096;
+            case 2:
+                return path_2048;
+            case 3:
+                return path_1024;
+            case 4:
+                return path_0512;
+            case 5:
+                return path_0256;
+            case 6:
+                return path_0128;
+            case 7:
+                return path_0064;
+            case 8:
+                return path_0032;
+            case 9:
+                return path_0016;
+            case 10:
+                return path_0008;
+            case 11:
+                return path_0004;
+            case 12:
+                return path_0002;
+            default:
+                return path_0001;
+        }
+    }
 
+    void update(){
+        if(Visible){
+            currentMaterial = null;
+            calculations();
+            collectGarbage(); //We're doing this manually because Godot doesn't want to do it for us.
+            currentMaterial = ResourceLoader.Load<Material>(targetMaterial());
+            meshInstance.SetSurfaceOverrideMaterial(materialSlot, currentMaterial);
+        }
     }
 }

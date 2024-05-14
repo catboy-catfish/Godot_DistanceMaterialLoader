@@ -1,22 +1,22 @@
-[gd_scene load_steps=12 format=3 uid="uid://febu8msw48yp"]
+[gd_scene load_steps=11 format=3 uid="uid://febu8msw48yp"]
 
 [ext_resource type="PackedScene" uid="uid://bdt3n748j4u1b" path="res://DemoFolder/Nodes/FlyingCamera/FlyingCamera.tscn" id="1_ofak5"]
 [ext_resource type="Script" path="res://DemoFolder/Scripts/Metrics.gd" id="1_s145h"]
-[ext_resource type="Material" uid="uid://bhhdff18cvfen" path="res://DemoFolder/Materials/CheckeredMips/512.tres" id="2_6weon"]
 [ext_resource type="Script" path="res://DistanceMaterialLoader/DistanceMaterialLoader.cs" id="2_o5shf"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_36qf5"]
-sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
-ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_5k7b1"]
+use_debanding = false
 
-[sub_resource type="Sky" id="Sky_r6uo1"]
-sky_material = SubResource("ProceduralSkyMaterial_36qf5")
+[sub_resource type="Sky" id="Sky_tp8kt"]
+sky_material = SubResource("ProceduralSkyMaterial_5k7b1")
+process_mode = 1
+radiance_size = 0
 
 [sub_resource type="Environment" id="Environment_vrh48"]
 background_mode = 2
-sky = SubResource("Sky_r6uo1")
+sky = SubResource("Sky_tp8kt")
+reflected_light_source = 1
 tonemap_mode = 2
-glow_enabled = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_gaxiv"]
 size = Vector3(20, 1, 20)
@@ -50,67 +50,33 @@ mesh = SubResource("BoxMesh_x4twt")
 skeleton = NodePath("../../..")
 
 [node name="Cube" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.5, 0.5, -9.5)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.5, -9.5)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Cube"]
 shape = SubResource("BoxShape3D_kiyht")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Cube"]
 mesh = SubResource("BoxMesh_3kvjp")
-surface_material_override/0 = ExtResource("2_6weon")
 
 [node name="DistanceMaterialLoader" type="Node3D" parent="Cube" node_paths=PackedStringArray("camera", "meshInstance")]
 script = ExtResource("2_o5shf")
+useGarbageCollection = false
 camera = NodePath("../../FlyingCamera/Camera3D")
 meshInstance = NodePath("../MeshInstance3D")
-maximumQuality = 4
-minimumQuality = 12
-mp_0001 = "res://DemoFolder/Materials/CheckeredMips/1.tres"
-mp_0002 = "res://DemoFolder/Materials/CheckeredMips/2.tres"
-mp_0004 = "res://DemoFolder/Materials/CheckeredMips/4.tres"
-mp_0008 = "res://DemoFolder/Materials/CheckeredMips/8.tres"
-mp_0016 = "res://DemoFolder/Materials/CheckeredMips/16.tres"
-mp_0032 = "res://DemoFolder/Materials/CheckeredMips/32.tres"
-mp_0064 = "res://DemoFolder/Materials/CheckeredMips/64.tres"
-mp_0128 = "res://DemoFolder/Materials/CheckeredMips/128.tres"
-mp_0256 = "res://DemoFolder/Materials/CheckeredMips/256.tres"
-mp_0512 = "res://DemoFolder/Materials/CheckeredMips/512.tres"
-mp_1024 = "res://DemoFolder/Materials/CheckeredMips/1024.tres"
-mp_2048 = "res://DemoFolder/Materials/CheckeredMips/2048.tres"
-mp_4096 = "res://DemoFolder/Materials/CheckeredMips/4096.tres"
-mp_8192 = "res://DemoFolder/Materials/CheckeredMips/8192.tres"
-
-[node name="Cube2" type="StaticBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.5, 0.5, -9.5)
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Cube2"]
-shape = SubResource("BoxShape3D_kiyht")
-
-[node name="MeshInstance3D" type="MeshInstance3D" parent="Cube2"]
-mesh = SubResource("BoxMesh_3kvjp")
-surface_material_override/0 = ExtResource("2_6weon")
-
-[node name="DistanceMaterialLoader" type="Node3D" parent="Cube2" node_paths=PackedStringArray("camera", "meshInstance")]
-script = ExtResource("2_o5shf")
-camera = NodePath("../../FlyingCamera/Camera3D")
-meshInstance = NodePath("../MeshInstance3D")
-maximumQuality = 4
-minimumQuality = 12
-distanceMultiplier = 0.5
-mp_0001 = "res://DemoFolder/Materials/CheckeredMips/1.tres"
-mp_0002 = "res://DemoFolder/Materials/CheckeredMips/2.tres"
-mp_0004 = "res://DemoFolder/Materials/CheckeredMips/4.tres"
-mp_0008 = "res://DemoFolder/Materials/CheckeredMips/8.tres"
-mp_0016 = "res://DemoFolder/Materials/CheckeredMips/16.tres"
-mp_0032 = "res://DemoFolder/Materials/CheckeredMips/32.tres"
-mp_0064 = "res://DemoFolder/Materials/CheckeredMips/64.tres"
-mp_0128 = "res://DemoFolder/Materials/CheckeredMips/128.tres"
-mp_0256 = "res://DemoFolder/Materials/CheckeredMips/256.tres"
-mp_0512 = "res://DemoFolder/Materials/CheckeredMips/512.tres"
-mp_1024 = "res://DemoFolder/Materials/CheckeredMips/1024.tres"
-mp_2048 = "res://DemoFolder/Materials/CheckeredMips/2048.tres"
-mp_4096 = "res://DemoFolder/Materials/CheckeredMips/4096.tres"
-mp_8192 = "res://DemoFolder/Materials/CheckeredMips/8192.tres"
+path_0001 = "res://DemoFolder/Materials/CheckeredMips/1.tres"
+path_0002 = "res://DemoFolder/Materials/CheckeredMips/2.tres"
+path_0004 = "res://DemoFolder/Materials/CheckeredMips/4.tres"
+path_0008 = "res://DemoFolder/Materials/CheckeredMips/8.tres"
+path_0016 = "res://DemoFolder/Materials/CheckeredMips/16.tres"
+path_0032 = "res://DemoFolder/Materials/CheckeredMips/32.tres"
+path_0064 = "res://DemoFolder/Materials/CheckeredMips/64.tres"
+path_0128 = "res://DemoFolder/Materials/CheckeredMips/128.tres"
+path_0256 = "res://DemoFolder/Materials/CheckeredMips/256.tres"
+path_0512 = "res://DemoFolder/Materials/CheckeredMips/512.tres"
+path_1024 = "res://DemoFolder/Materials/CheckeredMips/1024.tres"
+path_2048 = "res://DemoFolder/Materials/CheckeredMips/2048.tres"
+path_4096 = "res://DemoFolder/Materials/CheckeredMips/4096.tres"
+path_8192 = "res://DemoFolder/Materials/CheckeredMips/8192.tres"
 
 [node name="Control" type="Control" parent="."]
 layout_mode = 3
@@ -119,8 +85,11 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 
 [node name="FPS" type="Label" parent="Control"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 14.0
 offset_top = 14.0
@@ -129,20 +98,32 @@ offset_bottom = 37.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Frames/sec:"
 
-[node name="VideoMem" type="Label" parent="Control"]
+[node name="MiscVRAM" type="Label" parent="Control"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 15.0
 offset_top = 41.0
 offset_right = 173.0
 offset_bottom = 64.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
-text = "Video memory:"
+text = "Misc. VRAM: "
 
-[node name="TextureMem" type="Label" parent="Control"]
+[node name="VertexMem" type="Label" parent="Control"]
+unique_name_in_owner = true
 layout_mode = 0
 offset_left = 15.0
 offset_top = 67.0
 offset_right = 173.0
 offset_bottom = 90.0
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
+text = "Vertex memory:"
+
+[node name="TextureMem" type="Label" parent="Control"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 15.0
+offset_top = 90.0
+offset_right = 173.0
+offset_bottom = 113.0
 theme_override_colors/font_shadow_color = Color(0, 0, 0, 1)
 text = "Texture memory:"
